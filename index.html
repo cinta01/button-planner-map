@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Metadata -->
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width"
+		/>
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+
+		<!-- Judul pada tab browser -->
+		<title>LeafletJS</title>
+
+		<!-- Leaflet CSS Library -->
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		/>
+
+		<!-- Style untuk tampilan peta fullscreen -->
+		<style>
+			html,
+			body,
+			#map {
+				height: 500px;
+				width: 100%;
+				margin: 0px;
+			}
+
+			#button-area {
+				width: 100%;
+				height: 200px;
+				margin: 0px;
+				text-align: center;
+			}
+
+			button {
+				width: 100px;
+				height: 50px;
+				margin: 10px;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- Leaflet JavaScript Library -->
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+		<!-- HTML Block untuk menampilkan peta -->
+		<div id="map"></div>
+
+		<div id="button-area">
+			<button onclick="changemap(-7.7931578,110.3801537,13,'jogja','https://asset.kompas.com/crops/wirfPQ2CvlOiTr9yyK9VwQDfD9Q=/0x0:1000x667/750x500/data/photo/2020/04/12/5e931d94dc081.jpg')">JOGJA</button>
+			<button onclick="changemap(-7.5729654,110.8302498,13,'Solo','https://assets.promediateknologi.com/crop/0x0:0x0/x/photo/2022/11/02/823561164.jpeg')">SOLO</button>
+			<button onclick="changemap(-7.2471255,112.7351761,13,'SURABAYA','https://ikbis.ac.id/id/wp-content/uploads/2021/03/Anda-di-Surabaya-Inilah-Pentingnya-Menggunakan-Konsultan-Pajak-Surabaya.jpg')">SURABAYA</button>
+			<button onclick="changemap(-3.6570868034109556, 128.1380771795616,13,'AMBON','https://www.indonesia.travel/content/dam/indtravelrevamp/en/destinations/revision-2019/all-revision-destination/maluku/Ambon.jpg')">AMBON</button>
+			<button onclick="changemap(0.7963250524804234, 127.35756668629871,13,'Ternate','https://halmaherapost.com/wp-content/uploads/2021/02/Land-Mark.jpg')">TERNATE</button>
+		</div>
+
+		<script>
+			/* Initial Map */
+			var centermap = [-8.2864042, 124.7400982];
+			var map = L.map("map").setView(centermap, 11); //lat, long, zoom
+
+			/* Tile Basemap */
+			var basemap1 = L.tileLayer(
+				"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+				{
+					//attribution akan muncul di pojok kanan bawah
+					attribution:
+						'<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a href="https://www.unsorry.net" target="_blank">unsorry@2022</a>',
+				}
+			);
+			var basemap2 = L.tileLayer(
+				"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+				{
+					attribution:
+						"Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+				}
+			);
+			var basemap3 = L.tileLayer(
+				"https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+				{
+					maxZoom: 20,
+					subdomains: ["mt0", "mt1", "mt2", "mt3"],
+					attribution: "Google Streets",
+				}
+			);
+
+			basemap3.addTo(map); //Memanggil basemap untuk ditampilkan ketika halaman dipanggil
+
+			/* Marker */
+			var marker = L.marker(centermap); //lat, long
+			marker.addTo(map); //Marker ditampilkan ketika halaman dipanggil
+			/* Popup Marker */
+			marker.bindPopup("Ini marker alor <br>" + centermap);
+
+			var baseMaps = {
+				//list basemap
+				"Open Street Map": basemap1,
+				"ESRI World Imagery": basemap2,
+				"Google Street": basemap3,
+			};
+			var Layers = {
+				//list layer
+			};
+			var layerControl = L.control.layers(baseMaps, Layers, {
+				collapsed: false,
+			});
+			layerControl.addTo(map);
+
+			// untuk mengubah peta
+			function changemap(lat, long, zoom, kota, imageurl) {
+				map.setView([lat, long], zoom);
+
+				// untuk mengubah marker
+				marker.setLatLng([lat, long]);
+				marker.bindPopup("Ini " + kota + "<br>" + [lat, long] + "<br><img src='" + imageurl + "'width='200px'>");
+				marker.openPopup();
+			}
+		</script>
+	</body>
+</html>
